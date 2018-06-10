@@ -1,0 +1,8 @@
+---
+- name: Check version
+  shell: docker service inspect --pretty {{ service_name }} | grep Image | awk {'print $2'} | cut -d ":" -f2 | cut -d "@" -f1
+  register: version_srv
+
+- name: Update service
+  shell: docker service update --image={{ service_image }}:{{ service_version }} {{ service_name }}
+  when: version_srv.stdout != service_version

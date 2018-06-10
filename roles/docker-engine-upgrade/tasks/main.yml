@@ -1,0 +1,17 @@
+---
+- name: Check docker version
+  shell: dpkg -l 'docker-ce' | grep '{{ docker_version }}'
+  register: version_docker_ce
+  ignore_errors: true
+  failed_when: false
+
+- include: upgrade-managers.yml 
+  when: version_docker_ce.rc == 1 and swarm_node_state != 'worker'
+
+- name: Register worker join token
+  shell: docker swarm join-token --quiet worker
+  register: swarm_token_worker
+  when: swarm_node_state == 'leader'
+
+- include: upgrade-worker.yml
+  when: version_docker_ce.rc == 1 and swarm_node_state == 'worker'

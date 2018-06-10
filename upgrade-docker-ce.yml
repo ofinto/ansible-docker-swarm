@@ -1,0 +1,6 @@
+- hosts: cluster1
+  serial: 1
+  vars:
+    - docker_version: '18.03.0'
+  roles:
+    - docker-engine-upgrade

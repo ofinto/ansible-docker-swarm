@@ -1,0 +1,13 @@
+---
+# - debug: var=hostvars[inventory_hostname].groups['cluster1'][0]
+# - debug: var=hostvars[hostvars[inventory_hostname].groups['cluster1'][0]].swarm_token_manager.stdout
+# - debug: var=hostvars[hostvars[inventory_hostname].groups['cluster1'][0]].ansible_default_ipv4.address
+
+- name: Check node exist in cluster
+  shell: 'docker node ls'
+  register: node_m
+  ignore_errors: true
+
+- name: Manager joining swarm
+  shell: 'docker swarm join --token {{ hostvars[hostvars[inventory_hostname]["groups"]["cluster1"][0]].swarm_token_manager.stdout }} {{ hostvars[hostvars[inventory_hostname]["groups"]["cluster1"][0]].ansible_enp0s8.ipv4.address }}:2377'
+  when: node_m is failed

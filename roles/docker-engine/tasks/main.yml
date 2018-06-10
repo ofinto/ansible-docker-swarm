@@ -1,0 +1,9 @@
+---
+- name: Check if docker-ce installed
+  command: dpkg -l 'docker-ce'
+  register: dpkg_result
+  ignore_errors: true
+  failed_when: false
+
+- include: install.yml 
+  when: dpkg_result.rc == 1

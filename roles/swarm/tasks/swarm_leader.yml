@@ -1,0 +1,15 @@
+---
+- name: Initialize swarm cluster
+  shell: docker node ls || docker swarm init --advertise-addr "{{ ansible_enp0s8.ipv4.address }}"
+
+- name: Register manager join token
+  shell: docker swarm join-token --quiet manager
+  register: swarm_token_manager
+
+- name: Register worker join token
+  shell: docker swarm join-token --quiet worker
+  register: swarm_token_worker
+
+#- debug: var=swarm_token_manager
+
+#- debug: var=swarm_token_worker

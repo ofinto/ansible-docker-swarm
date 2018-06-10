@@ -1,0 +1,77 @@
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/xenial64"
+
+  config.vm.define :n1 do |vm_config|
+      vm_config.vm.host_name = "n1"
+      vm_config.disksize.size = '10GB'
+      vm_config.vm.network "private_network", ip:"192.168.35.11"
+      vm_config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "2048"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+          vb.name = 'n1'
+      end
+  end
+
+  config.vm.define :n2 do |vm_config|
+      vm_config.vm.host_name = "n2"
+      vm_config.disksize.size = '10GB'
+      vm_config.vm.network "private_network", ip:"192.168.35.12"
+      vm_config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "2048"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+          vb.name = 'n2'
+      end
+  end
+
+  config.vm.define :n3 do |vm_config|
+      vm_config.vm.host_name = "n3"
+      vm_config.disksize.size = '10GB'
+      vm_config.vm.network "private_network", ip:"192.168.35.13"
+      vm_config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "2048"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+          vb.name = 'n3'
+      end
+  end
+
+  config.vm.define :n4 do |vm_config|
+      vm_config.vm.host_name = "n4"
+      vm_config.disksize.size = '10GB'
+      vm_config.vm.network "private_network", ip:"192.168.35.14"
+      vm_config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "2048"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+          vb.name = 'n4'
+      end
+  end
+
+  config.vm.define :n5 do |vm_config|
+      vm_config.vm.host_name = "n5"
+      vm_config.disksize.size = '10GB'
+      vm_config.vm.network "private_network", ip:"192.168.35.15"
+      vm_config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "2048"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+          vb.name = 'n5'
+      end
+  end
+
+  config.vm.define :n6 do |vm_config|
+      vm_config.vm.host_name = "n6"
+      vm_config.disksize.size = '10GB'
+      vm_config.vm.network "private_network", ip:"192.168.35.16"
+      vm_config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "2048"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+          vb.name = 'n6'
+      end
+  end
+
+  id_rsa_ssh_key_pub = File.read(File.join(Dir.home, ".ssh", "id_rsa.pub"))
+  config.vm.provision :shell, :inline => "echo 'Copying local public SSH Key to VM auth_key' && echo '\n' >> /home/ubuntu/.ssh/authorized_keys && echo '#{id_rsa_ssh_key_pub }' >> /home/ubuntu/.ssh/authorized_keys && chmod 600 /home/ubuntu/.ssh/authorized_keys"
+  config.vm.provision :shell, :inline => "apt-get update -y && apt-get install aptitude -y && aptitude safe-upgrade -y &&  aptitude install net-tools bind-utils mc htop iftop python -y"
+
+  # need for git clone repo
+  config.ssh.forward_agent = "true"
+
+end

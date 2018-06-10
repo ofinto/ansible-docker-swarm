@@ -1,0 +1,8 @@
+---
+- name: Install haproxy
+  apt: name=haproxy state=present cache_valid_time=3600
+
+- name: Copy haproxy.cfg file
+  template: src=haproxy.cfg dest=/etc/haproxy/haproxy.cfg
+  notify: reload haproxy
+

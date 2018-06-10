@@ -1,0 +1,27 @@
+---
+- name: Get name
+  shell: docker info | grep Name | awk {'print $2'}
+  register: name_manager
+
+- name: Enable drain mode for node
+  shell: docker node update --availability drain {{ name_manager.stdout }}
+
+- pause: seconds=10
+
+- name: Check when containers are on drained node
+  shell: docker node ps {{ name_manager.stdout }} | awk {'print $5'} | grep Running
+  register: running_ct
+  ignore_errors: true
+  failed_when: false
+
+- name: Upgrade docker-ce
+  apt: name=docker-ce={{docker_version}}*
+  when: running_ct.rc == 1
+
+- name: Check node in swarm and status ready
+  shell: docker node ls | grep {{ name_manager.stdout }} | grep Ready
+  register: ready
+
+- name: Change availablity to active
+  shell: docker node update --availability active {{ name_manager.stdout }}
+  when: ready.rc == 0

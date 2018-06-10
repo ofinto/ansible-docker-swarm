@@ -1,0 +1,16 @@
+---
+- name: "Check service {{ service_name }} exists"
+  shell: docker service ls --filter name={{ service_name }} | grep {{ service_name }}
+  register: service_exists
+  ignore_errors: true
+  failed_when: false
+  when: swarm_node_state == 'manager'
+
+- include: create-service.yml
+  when: swarm_node_state == 'manager' and service_exists.stdout == "" 
+
+- include: replica-service.yml
+  when: swarm_node_state == 'manager' and service_exists.stdout != ""
+
+- include: update-service.yml
+  when: swarm_node_state == 'manager' and service_exists.stdout != ""

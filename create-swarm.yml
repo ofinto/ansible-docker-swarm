@@ -1,0 +1,4 @@
+- hosts: cluster1
+  roles:
+   - { role: docker-engine, version: '17.12.1' }
+   - swarm

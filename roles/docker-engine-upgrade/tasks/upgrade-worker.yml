@@ -1,0 +1,21 @@
+---
+#- name: Get name
+#  shell: docker info | grep Name | awk {'print $2'}
+#  register: name_worker
+
+#- name: Get first manger address
+#  shell: docker info | grep -a1 "Manager Addresses" | tail -1 | cut -d ":" -f1
+#  register: manager_a
+#  ignore_errors: true
+#  failed_when: false
+
+#- debug: var=manager_a.stdout
+
+- name: Swarm leave
+  command: docker swarm leave
+
+- name: Upgrade docker-ce
+  apt: name=docker-ce={{docker_version}}*
+
+- name: Worker joining swarm
+  shell: 'docker swarm join --token {{ hostvars[hostvars[inventory_hostname]["groups"]["cluster1"][0]].swarm_token_worker.stdout }} {{ hostvars[hostvars[inventory_hostname]["groups"]["cluster1"][0]].ansible_enp0s8.ipv4.address }}:2377'

@@ -1,0 +1,9 @@
+---
+- include: swarm_leader.yml
+  when: swarm_node_state == 'leader'
+
+- include: swarm_manager.yml
+  when: swarm_node_state == 'manager'
+
+- include: swarm_worker.yml
+  when: swarm_node_state == 'worker'

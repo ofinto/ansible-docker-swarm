@@ -1,0 +1,12 @@
+- hosts: cluster1
+  serial: 1
+  roles:
+    - { role: docker-service, service_name: nginx-test, service_image: nginx, service_version: '1.10.3', service_replicas: '5', service_port: '8080:80' }
+
+- hosts: balancers
+  vars:
+     backends: "{{ groups['cluster1'] }}"
+     front_port: 80
+     back_port: 8080
+  roles:
+     - role: haproxy

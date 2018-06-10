@@ -1,0 +1,9 @@
+---
+- name: Check replicas
+  #shell: docker service ls --filter name={{ service_name }} | grep {{ service_name }} | awk {'print $4'} | cut -d "/" -f2
+  shell: docker service inspect --pretty {{ service_name }} | grep Replicas | awk {'print $2'}
+  register: replicas_srv
+
+- name: Change replicas
+  shell: docker service update --replicas={{ service_replicas }} {{ service_name }}
+  when: replicas_srv.stdout != service_replicas

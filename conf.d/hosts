@@ -1,0 +1,9 @@
+[cluster1]
+test01-cl-int-v ansible_ssh_host=192.168.35.11 swarm_node_state='leader'
+test02-cl-int-v ansible_ssh_host=192.168.35.12 swarm_node_state='manager'
+test03-cl-int-v ansible_ssh_host=192.168.35.13 swarm_node_state='manager'
+test04-cl-int-v ansible_ssh_host=192.168.35.14 swarm_node_state='worker'
+test05-cl-int-v ansible_ssh_host=192.168.35.15 swarm_node_state='worker'
+
+[balancers]
+test06-cl-int-v ansible_ssh_host=192.168.35.16

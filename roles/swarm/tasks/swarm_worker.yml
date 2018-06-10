@@ -1,0 +1,9 @@
+---
+- name: Check node exist in cluster
+  shell: 'docker info | grep "Swarm: active"'
+  register: node_w
+  ignore_errors: true
+
+- name: Worker joining swarm
+  shell: 'docker swarm join --token {{ hostvars[hostvars[inventory_hostname]["groups"]["cluster1"][0]].swarm_token_worker.stdout }} {{ hostvars[hostvars[inventory_hostname]["groups"]["cluster1"][0]].ansible_enp0s8.ipv4.address }}:2377'
+  when: node_w is failed

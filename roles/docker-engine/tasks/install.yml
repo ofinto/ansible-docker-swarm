@@ -1,0 +1,15 @@
+- name: Add apt key
+  apt_key: url=https://download.docker.com/linux/{{ ansible_distribution|lower }}/gpg state=present
+
+- name: Add repo
+  apt_repository: repo='deb https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable' state=present
+
+- name: Install packages to allow apt and docker-ce
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - docker-ce={{version}}*
+
